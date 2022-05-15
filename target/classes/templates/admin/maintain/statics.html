@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    <head>
+        <meta charset="UTF-8">
+        <title> houqin</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <link rel="stylesheet" href="/static/admin/css/font.css">
+        <link rel="stylesheet" href="/static/admin/css/xadmin.css">
+        <script type="text/javascript" src="/static/admin/js/jquery-3.4.1.js" charset="utf-8"></script>
+        <script src="/static/admin/lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="/static/admin/js/admin.js"></script>
+        <script src="/static/admin/js/echarts.min.js"></script>
+        <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="x-nav">
+          <span class="layui-breadcrumb">
+            <a href="">统计管理</a>
+            <a>
+              <cite>统计</cite></a>
+          </span>
+          <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+            <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+        </div>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div id="main" style="width: 800px;height:400px;"></div>
+                <!--<div id="main2" style="width: 800px;height:400px;"></div>-->
+                <!--<div id="main3" style="width: 200px;display:inline-block;"></div>-->
+                <!--<div id="main4" style="width: 200px;display:inline-block;">-->
+                    <!--<input type="text" id="name" placeholder="维修人员姓名"/>-->
+                    <!--<input type="button" value="查询" id="search"/>-->
+                    <!--<div id="main5" style="width: 800px;height:400px;display:inline-block;"></div>-->
+                <!--</div>-->
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        var prefix = "/admin/maintain";
+        var role = "[[${session.adminInfo.roleName}]]";
+        debugger
+        console.log(role)
+        if(role === "员工"){
+            $.get(prefix + "/getStatics1",function(data){
+                console.log(data);
+                statics1(data.data);
+            })
+            $.get(prefix + "/getStatics2",function(data){
+                console.log(data);
+                statics2(data.data);
+            })
+        }else if(role === "维修工"){
+            $.get(prefix + "/getStatics3",function(data){
+                console.log(data);
+                statics1(data.data);
+            })
+            $.get(prefix + "/getStatics4",function(data){
+                console.log(data);
+                statics2(data.data);
+            })
+        }else if(role === "管理员"){
+            $.get(prefix + "/getStatics5",function(data){
+                console.log(data);
+                statics2(data.data);
+            })
+
+            $.get(prefix + "/getStatics6",function(data){
+                console.log(data);
+                statics3(data.data.data1,data.data.data2,data.data.data3);
+            })
+
+            // $.get(prefix + "/getStatics7",function(info){
+            //     debugger
+            //     var data = info.data
+            //     var htmlTpl = "<h4>维修排名</h4><br/><ul>"
+            //     for(var i=0;i<data.length;i++){
+            //         htmlTpl = htmlTpl + "<li>" + data[i].name + " 得分："  +data[i].num +"</li>";
+            //     }
+            //     htmlTpl = htmlTpl + "</ul>";
+            //     $("#main3").html(htmlTpl)
+            // })
+        }
+
+        // $("#search").click(function (){
+        //     var name = $("#name").val();
+        //     if (name === "" ){
+        //         alert("请输入查询的名字");
+        //         return false;
+        //     }
+        //     $.get(prefix + "/getStatics",{"name":name},function(data){
+        //         console.log(data);
+        //         statics4(data.data);
+        //     })
+        //     console.log(name)
+        // });
+
+        function statics1(data){
+            // 基于准备好的dom，初始化echarts实例
+            var myChart = echarts.init(document.getElementById('main'));
+
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    text: '报修量统计'
+                },
+                tooltip: {},
+                legend: {
+                    data:['数量']
+                },
+                xAxis: {
+                    data: ["01月","02月","03月","04月","05月","06月","07月","08月","09月","10月","11月","12月"]
+                },
+                yAxis: {},
+                series: [{
+                    name: '报修量',
+                    type: 'line',
+                    data: data
+                }]
+            };
+
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+        }
+
+        // function statics2(data){
+        //     // 基于准备好的dom，初始化echarts实例
+        //     var myChart = echarts.init(document.getElementById('main2'));
+        //
+        //     myChart.setOption({
+        //         series : [
+        //             {
+        //                 name: '报修统计',
+        //                 type: 'pie',    // 设置图表类型为饼图
+        //                 radius: '55%',  // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
+        //                 roseType: 'angle',
+        //                 label: {
+        //                     normal: {
+        //                         show: true,
+        //                         formatter: '{b}: {c}个({d}%)'
+        //                     }
+        //                 },
+        //                 data: data
+        //             }
+        //         ]
+        //     })
+        // }
+
+        function statics3(data1,data2,data3){
+            debugger
+            var chartDom = document.getElementById('main');
+            var myChart = echarts.init(chartDom);
+            var option;
+
+            option = {
+                title: {
+                    text: '全年维修统计'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {},
+                toolbox: {
+                    show: true,
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        dataView: { readOnly: false },
+                        magicType: { type: ['line', 'bar'] },
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ["01月","02月","03月","04月","05月","06月","07月","08月","09月","10月","11月","12月"]
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        formatter: '{value} 个'
+                    }
+                },
+                series: [
+                    {
+                        name: '未维修数',
+                        type: 'line',
+                        data: data1,
+                        markPoint: {
+                            data: [
+                                { type: 'max', name: 'Max' },
+                                { type: 'min', name: 'Min' }
+                            ]
+                        },
+                        markLine: {
+                            data: [{ type: 'average', name: 'Avg' }]
+                        }
+                    },
+                    {
+                        name: '已维修数',
+                        type: 'line',
+                        data: data2,
+                        markPoint: {
+                            data: [{ name: '周最低', value: -2, xAxis: 1, yAxis: -1.5 }]
+                        },
+                        markLine: {
+                            data: [
+                                { type: 'average', name: 'Avg' },
+                                [
+                                    {
+                                        symbol: 'none',
+                                        x: '90%',
+                                        yAxis: 'max'
+                                    },
+                                    {
+                                        symbol: 'circle',
+                                        label: {
+                                            position: 'start',
+                                            formatter: 'Max'
+                                        },
+                                        type: 'max',
+                                        name: '最高点'
+                                    }
+                                ]
+                            ]
+                        }
+                    },
+                    {
+                        name: '驳回数',
+                        type: 'line',
+                        data: data3,
+                        markPoint: {
+                            data: [{ name: '周最低', value: -2, xAxis: 1, yAxis: -1.5 }]
+                        },
+                        markLine: {
+                            data: [
+                                { type: 'average', name: 'Avg' },
+                                [
+                                    {
+                                        symbol: 'none',
+                                        x: '90%',
+                                        yAxis: 'max'
+                                    },
+                                    {
+                                        symbol: 'circle',
+                                        label: {
+                                            position: 'start',
+                                            formatter: 'Max'
+                                        },
+                                        type: 'max',
+                                        name: '最高点'
+                                    }
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            };
+
+            option && myChart.setOption(option);
+
+        }
+
+        // function statics4(data){
+        //     debugger
+        //     // 基于准备好的dom，初始化echarts实例
+        //     var myChart = echarts.init(document.getElementById('main5'));
+        //
+        //     myChart.setOption({
+        //         series : [
+        //             {
+        //                 name: '个人报修统计',
+        //                 type: 'pie',    // 设置图表类型为饼图
+        //                 radius: '55%',  // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
+        //                 roseType: 'angle',
+        //                 label: {
+        //                     normal: {
+        //                         show: true,
+        //                         formatter: '{b}: {c}个({d}%)'
+        //                     }
+        //                 },
+        //                 data: data
+        //             }
+        //         ]
+        //     })
+        // }
+
+
+    </script>
+</html>

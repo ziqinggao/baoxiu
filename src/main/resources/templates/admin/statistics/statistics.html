@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    <head>
+        <meta charset="UTF-8">
+        <title> houqin</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <link rel="stylesheet" href="/static/admin/css/font.css">
+        <link rel="stylesheet" href="/static/admin/css/xadmin.css">
+        <script src="/static/admin/lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="/static/admin/js/admin.js"></script>
+        <script src="/static/admin/js/echarts.min.js"></script>
+        <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="x-nav">
+          <span class="layui-breadcrumb">
+            <a href="">统计管理</a>
+            <a>
+              <cite>收入统计</cite></a>
+          </span>
+          <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+            <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+        </div>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div id="box" style="width: 1500px;height: 800px;"></div>
+            </div>
+        </div> 
+    </body>
+    <script type="text/javascript">
+
+        var numbers = [[${money}]]
+        var times = "[[${times}]]"
+        var days = []
+        var timesStr = times.substr(1,times.length-2);
+        days = timesStr.split(",");
+        //初始化ehcharts实例
+        var myChart=echarts.init(document.getElementById("box"));
+        //指定图表的配置项和数据
+        var option={
+            //标题
+            title:{
+                text:'近30天收入统计 '
+            },
+            //工具箱
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
+            //保存图片
+            toolbox:{
+                show:true,
+                feature:{
+                    saveAsImage:{
+                        show:true
+                    }
+                }
+            },
+            //图例-每一条数据的名字叫销量
+            legend:{
+                data:['日期']
+            },
+            //x轴
+            xAxis:{
+                data:days
+            },
+            //y轴没有显式设置，根据值自动生成y轴
+            yAxis:{},
+            //数据-data是最终要显示的数据
+            series:[{
+                name:'收入',
+                type:'line',
+                data:numbers
+            }]
+        };
+        //使用刚刚指定的配置项和数据项显示图表
+        myChart.setOption(option);
+    </script>
+</html>
